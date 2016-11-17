@@ -77,18 +77,24 @@ var FPSStats = React.createClass({
     style.bottom = this.props.bottom;
     style.left = this.props.left;
   },
+  
+  componentWillUnmount: function() {
+    this.unMount = true;
+  },
 
   componentDidMount: function() {
     if (!this.props.isActive) {
       return;
     }
 
+    this.unMount = false;
     var that = this;
 
     var onRequestAnimationFrame = function() {
-      that.calcFPS();
-
-      window.requestAnimationFrame(onRequestAnimationFrame);
+      if (!that.unMount) {
+        that.calcFPS();
+        window.requestAnimationFrame(onRequestAnimationFrame);
+      }
     };
 
     window.requestAnimationFrame(onRequestAnimationFrame);
